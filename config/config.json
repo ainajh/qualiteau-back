@@ -1,8 +1,8 @@
 {
   "development": {
-    "username": "root",
+    "username": "u466480084_root",
     "password": "",
-    "database": "db_qualiteau",
+    "database": "u466480084_db_qualiteau",
     "host": "localhost",
     "dialect": "mysql"
   },
