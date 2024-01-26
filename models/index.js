@@ -48,5 +48,6 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 db.users = require("./user")(sequelize, Sequelize);
 db.pcd = require("./pcd")(sequelize, Sequelize);
+db.capteur = require("./capteur")(sequelize, Sequelize);
 
 module.exports = db;

@@ -6,6 +6,7 @@ module.exports = (app) => {
   // crud pdc
   router.post("/", authMiddleware.requireAuthAdmin, pcds.create);
   router.get("/", authMiddleware.requireAuthAdmin, pcds.findAll);
+  router.get("/active", authMiddleware.requireAuthAdmin, pcds.findAllActive);
   router.get("/:id", pcds.findOne);
   router.put("/:id", authMiddleware.requireAuthAdmin, pcds.update);
   router.delete("/:id", authMiddleware.requireAuthAdmin, pcds.delete);

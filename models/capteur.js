@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class Pcd extends Model {
+  class Capteur extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,90 +11,105 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   }
-  Pcd.init(
+  Capteur.init(
     {
-      name_pcd: {
+      name_capt: {
         type: DataTypes.STRING,
         validate: {
           notEmpty: {
             arg: true,
-            msg: "Nom de la PCD réquis",
+            msg: "Nom de la capteur réquis",
           },
         },
       },
-      name_show: {
+      type_mes: {
         type: DataTypes.STRING,
         validate: {
           notEmpty: {
             arg: true,
-            msg: "Nom affiché réquis",
+            msg: "Type de mesure réquis",
           },
         },
       },
-      coord: {
-        type: DataTypes.STRING,
-        validate: {
-          notEmpty: {
-            arg: true,
-            msg: "Coordonnées réquis",
-          },
-        },
-      },
-      model_pcd: {
-        type: DataTypes.STRING,
-        validate: {
-          notEmpty: {
-            arg: true,
-            msg: "Modèle datalogger réquis",
-          },
-        },
-      },
-      fabricant: {
-        type: DataTypes.STRING,
-        validate: {
-          notEmpty: {
-            arg: true,
-            msg: "Le Fabricant réquis",
-          },
-        },
-      },
-      date_install: {
+      date_cal: {
         type: DataTypes.DATE,
         validate: {
           notEmpty: {
             arg: true,
-            msg: "La date d’installation est réquise",
+            msg: "Date de calibration réquis",
           },
         },
       },
-      transmission: {
+      durre_call: {
+        type: DataTypes.DATE,
+        validate: {
+          notEmpty: {
+            arg: true,
+            msg: "Durréé de calibration réquis",
+          },
+        },
+      },
+      type_sem: {
         type: DataTypes.STRING,
         validate: {
           notEmpty: {
             arg: true,
-            msg: "Le mode de transmission est réquis",
+            msg: "Type sématique réquis",
           },
         },
       },
-      status: {
-        type: DataTypes.STRING,
+      val_min: {
+        type: DataTypes.FLOAT,
         validate: {
-          isIn: {
-            args: [["active", "desactive"]],
-            msg: "Role doit être 'active' ou 'desactive'",
-          },
           notEmpty: {
             arg: true,
-            msg: "Le rôle est réquis",
+            msg: "Valeur min  réquis",
           },
         },
       },
-      proprietaire: {
+      val_max: {
+        type: DataTypes.FLOAT,
+        validate: {
+          notEmpty: {
+            arg: true,
+            msg: "Valeur max  réquis",
+          },
+        },
+      },
+      nb_dec: {
+        type: DataTypes.FLOAT,
+        validate: {
+          notEmpty: {
+            arg: true,
+            msg: "Nombre decimaux  réquis",
+          },
+        },
+      },
+      unit: {
         type: DataTypes.STRING,
         validate: {
           notEmpty: {
             arg: true,
-            msg: "Propriétaire est requis",
+            msg: "Unité réquis",
+          },
+        },
+      },
+      unit_show: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: {
+            arg: true,
+            msg: "Unité réquis",
+          },
+        },
+      },
+     
+      color: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: {
+            arg: true,
+            msg: "Couleur requis",
           },
         },
       },
@@ -102,8 +117,8 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       timestamps: true,
-      modelName: "Pcd",
+      modelName: "Capteur",
     }
   );
-  return Pcd;
+  return Capteur;
 };

@@ -3,7 +3,7 @@
     "username": "u466480084_root",
     "password": "Ainajh11@",
     "database": "u466480084_db_qualiteau",
-    "host": "localhost",
+    "host": "srv698.hstgr.io",
     "dialect": "mysql"
   },
   "test": {
@@ -14,10 +14,10 @@
     "dialect": "mysql"
   },
   "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
+    "username": "u466480084_root",
+    "password": "Ainajh11@",
+    "database": "u466480084_db_qualiteau",
+    "host": "srv698.hstgr.io",
     "dialect": "mysql"
   }
 }

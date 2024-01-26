@@ -1,30 +1,34 @@
 const db = require("../models");
-const Pcd = db.pcd;
+const Capteur = db.capteur;
 // Create and Save a new user
 exports.create = async (req, res) => {
   const {
-    name_pcd,
-    name_show,
-    coord,
-    model_pcd,
-    fabricant,
-    date_install,
-    transmission,
-    status,
-    proprietaire,
+    name_capt,
+    type_mes,
+    date_cal,
+    durre_call,
+    type_sem,
+    val_min,
+    val_max,
+    nb_dec,
+    unit,
+    color,
+    unit_show,
   } = req.body;
-  const pcd_data = {
-    name_pcd,
-    name_show,
-    coord,
-    model_pcd,
-    fabricant,
-    date_install,
-    transmission,
-    status,
-    proprietaire,
+  const capteur_data = {
+    name_capt,
+    type_mes,
+    date_cal,
+    durre_call,
+    type_sem,
+    val_min,
+    val_max,
+    nb_dec,
+    unit,
+    color,
+    unit_show,
   };
-  Pcd.create(pcd_data)
+  Capteur.create(capteur_data)
     .then((data) => {
       const { ...result } = data.dataValues;
       res.status(201).json({
@@ -34,21 +38,22 @@ exports.create = async (req, res) => {
       });
     })
     .catch((err) => {
+      console.log(err);
       res.status(500).json({
         error: true,
-        message:
-          err?.errors[0].message || "Il y a une erreur lors de la création.",
+        message: 
+          err?.errors[0]?.message || "Il y a une erreur lors de la création.",
       });
     });
 };
 
-// Retrieve all Pcd from the database.
+// Retrieve all capteur from the database.
 exports.findAll = (req, res) => {
-  Pcd.findAll()
+  Capteur.findAll()
     .then((data) => {
       res.status(200).send({
         error: false,
-        message: "Liste de toutes les PCD",
+        message: "Liste de toutes les capteur",
         data,
       });
     })
@@ -60,11 +65,11 @@ exports.findAll = (req, res) => {
     });
 };
 exports.findAllActive = (req, res) => {
-  Pcd.findAll({ where: { status: "active" } })
+  Capteur.findAll({ where: { status: "active" } })
     .then((data) => {
       res.status(200).send({
         error: false,
-        message: "Liste de toutes les PCD",
+        message: "Liste de toutes les capteurs",
         data,
       });
     })
@@ -80,7 +85,7 @@ exports.findAllActive = (req, res) => {
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  Pcd.findByPk(id)
+  Capteur.findByPk(id)
     .then((data) => {
       if (data) {
         res.status(200).send({
@@ -90,7 +95,7 @@ exports.findOne = (req, res) => {
       } else {
         res.status(404).send({
           error: false,
-          message: `PCD inconnue`,
+          message: `capteur inconnue`,
         });
       }
     })
@@ -105,28 +110,32 @@ exports.findOne = (req, res) => {
 exports.update = async (req, res) => {
   const id = req.params.id;
   const {
-    name_pcd,
-    name_show,
-    coord,
-    model_pcd,
-    fabricant,
-    date_install,
-    transmission,
-    status,
-    proprietaire,
+    name_capt,
+    type_mes,
+    date_cal,
+    durre_call,
+    type_sem,
+    val_min,
+    val_max,
+    nb_dec,
+    unit,
+    color,
+    unit_show,
   } = req.body;
-  const pcd_data = {
-    name_pcd,
-    name_show,
-    coord,
-    model_pcd,
-    fabricant,
-    date_install,
-    transmission,
-    status,
-    proprietaire,
+  const capteur_data = {
+    name_capt,
+    type_mes,
+    date_cal,
+    durre_call,
+    type_sem,
+    val_min,
+    val_max,
+    nb_dec,
+    unit,
+    color,
+    unit_show,
   };
-  Pcd.update(pcd_data, {
+  Capteur.update(capteur_data, {
     where: { id: id },
   })
     .then((num) => {
@@ -134,12 +143,12 @@ exports.update = async (req, res) => {
         res.status(200).send({
           error: false,
           message: "Modification avec succès.",
-          data: pcd_data,
+          data: capteur_data,
         });
       } else {
         res.send({
           error: false,
-          message: `PCD inconnue`,
+          message: `capteur inconnue`,
         });
       }
     })
@@ -147,7 +156,7 @@ exports.update = async (req, res) => {
       res.status(500).send({
         error: true,
         message:
-          err?.errors[0].message || "Il y a une erreur lors de la requete",
+          err?.errors[0]?.message || "Il y a une erreur lors de la requete",
       });
     });
 };
@@ -156,7 +165,7 @@ exports.update = async (req, res) => {
 exports.delete = (req, res) => {
   const id = req.params.id;
 
-  Pcd.destroy({
+  Capteur.destroy({
     where: { id: id },
   })
     .then((num) => {
@@ -168,7 +177,7 @@ exports.delete = (req, res) => {
       } else {
         res.send({
           error: false,
-          message: "PCD à supprimer inconnue",
+          message: "capteur à supprimer inconnue",
         });
       }
     })
@@ -188,14 +197,14 @@ exports.deleteAll = (req, res) => {
       error: false,
       message: `Attention à votre requete`,
     });
-  Pcd.destroy({
+  Capteur.destroy({
     where: {},
     truncate: false,
   })
     .then((nums) => {
       res.status(200).send({
         error: false,
-        message: `${nums} pcd sont supprimé avec succès!`,
+        message: `${nums} capteur sont supprimé avec succès!`,
       });
     })
     .catch((err) => {
