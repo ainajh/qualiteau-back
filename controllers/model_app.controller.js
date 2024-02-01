@@ -1,37 +1,19 @@
 const db = require("../models");
-const Capteur = db.capteur;
-const Pcd = db.pcd;
+const ModelApp = db.model_app;
 // Create and Save a new user
 exports.create = async (req, res) => {
-  const {
-    name_capt,
-    type_mes,
-    date_cal,
-    durre_call,
-    type_sem,
+  const { name, mesure, sematique, type_val, val_min, val_max, nb_dec } =
+    req.body;
+  const mdapp_data = {
+    name,
+    mesure,
+    sematique,
+    type_val,
     val_min,
     val_max,
     nb_dec,
-    unit,
-    color,
-    unit_show,
-    pcd,
-  } = req.body;
-  const capteur_data = {
-    name_capt,
-    type_mes,
-    date_cal,
-    durre_call,
-    type_sem,
-    val_min,
-    val_max,
-    nb_dec,
-    unit,
-    color,
-    unit_show,
-    pcd,
   };
-  Capteur.create(capteur_data)
+  ModelApp.create(mdapp_data)
     .then((data) => {
       const { ...result } = data.dataValues;
       res.status(201).json({
@@ -41,53 +23,30 @@ exports.create = async (req, res) => {
       });
     })
     .catch((err) => {
-      console.log(err);
       res.status(500).json({
         error: true,
         message:
-          err?.errors[0]?.message || "Il y a une erreur lors de la création.",
+          err?.errors[0].message || "Il y a une erreur lors de la création.",
       });
     });
 };
 
-// Retrieve all capteur from the database.
+// Retrieve all Pcd from the database.
 exports.findAll = (req, res) => {
-  Capteur.findAll()
-    .then(async (data) => {
-      var result = [];
-      var pcdPopulate;
-      for (let index = 0; index < data.length; index++) {
-        pcdPopulate = await Pcd.findByPk(data[index].dataValues.pcd).then(
-          (rer) => rer
-        );
-        result.push({ ...data[index].dataValues, pcd_name: pcdPopulate.dataValues.name_pcd });
-      }
-      res.status(200).send({
-        error: false,
-        message: "Liste de toutes les capteur",
-        data: result,
-      });
-    })
-    .catch((err) => {
-      res.status(500).send({
-        error: true,
-        message: err.message || "Il y a une erreur lors de la requete",
-      });
-    });
-};
-exports.findAllActive = (req, res) => {
-  Capteur.findAll({ where: { status: "active" } })
+  ModelApp.findAll()
     .then((data) => {
       res.status(200).send({
         error: false,
-        message: "Liste de toutes les capteurs",
+        message: "Liste de toutes les models d'appareil",
         data,
       });
     })
     .catch((err) => {
-      res.status(500).send({
+      console.log(err);
+      res.status(500).json({
         error: true,
-        message: err.message || "Il y a une erreur lors de la requete",
+        message:
+          err?.errors?.[0]?.message || "Il y a une erreur lors de la création.",
       });
     });
 };
@@ -96,7 +55,7 @@ exports.findAllActive = (req, res) => {
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
-  Capteur.findByPk(id)
+  ModelApp.findByPk(id)
     .then((data) => {
       if (data) {
         res.status(200).send({
@@ -106,7 +65,7 @@ exports.findOne = (req, res) => {
       } else {
         res.status(404).send({
           error: false,
-          message: `capteur inconnue`,
+          message: `Models d'appareil inconnue`,
         });
       }
     })
@@ -120,35 +79,18 @@ exports.findOne = (req, res) => {
 // Update an user by the id in the request
 exports.update = async (req, res) => {
   const id = req.params.id;
-  const {
-    name_capt,
-    type_mes,
-    date_cal,
-    durre_call,
-    type_sem,
+  const { name, mesure, sematique, type_val, val_min, val_max, nb_dec } =
+    req.body;
+  const mdapp_data = {
+    name,
+    mesure,
+    sematique,
+    type_val,
     val_min,
     val_max,
     nb_dec,
-    unit,
-    color,
-    unit_show,
-    pcd,
-  } = req.body;
-  const capteur_data = {
-    name_capt,
-    type_mes,
-    date_cal,
-    durre_call,
-    type_sem,
-    val_min,
-    val_max,
-    nb_dec,
-    unit,
-    color,
-    unit_show,
-    pcd,
   };
-  Capteur.update(capteur_data, {
+  ModelApp.update(mdapp_data, {
     where: { id: id },
   })
     .then((num) => {
@@ -156,12 +98,12 @@ exports.update = async (req, res) => {
         res.status(200).send({
           error: false,
           message: "Modification avec succès.",
-          data: capteur_data,
+          data: mdapp_data,
         });
       } else {
         res.send({
           error: false,
-          message: `capteur inconnue`,
+          message: `Models d'appareil inconnue`,
         });
       }
     })
@@ -169,7 +111,7 @@ exports.update = async (req, res) => {
       res.status(500).send({
         error: true,
         message:
-          err?.errors[0]?.message || "Il y a une erreur lors de la requete",
+          err?.errors[0].message || "Il y a une erreur lors de la requete",
       });
     });
 };
@@ -178,7 +120,7 @@ exports.update = async (req, res) => {
 exports.delete = (req, res) => {
   const id = req.params.id;
 
-  Capteur.destroy({
+  ModelApp.destroy({
     where: { id: id },
   })
     .then((num) => {
@@ -190,7 +132,7 @@ exports.delete = (req, res) => {
       } else {
         res.send({
           error: false,
-          message: "capteur à supprimer inconnue",
+          message: "Le model d'appareil à supprimer inconnue",
         });
       }
     })
@@ -210,14 +152,14 @@ exports.deleteAll = (req, res) => {
       error: false,
       message: `Attention à votre requete`,
     });
-  Capteur.destroy({
+  ModelApp.destroy({
     where: {},
     truncate: false,
   })
     .then((nums) => {
       res.status(200).send({
         error: false,
-        message: `${nums} capteur sont supprimé avec succès!`,
+        message: `${nums} pcd sont supprimé avec succès!`,
       });
     })
     .catch((err) => {

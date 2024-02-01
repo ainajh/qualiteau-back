@@ -9,6 +9,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      // Pcd.hasOne(models.Capteur, { foreignKey: "pcd" });
+      Pcd.belongsTo(models.Capteur, { foreignKey: "pcd" });
     }
   }
   Pcd.init(

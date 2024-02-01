@@ -1,5 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
+const Pcd = require("./pcd");
 module.exports = (sequelize, DataTypes) => {
   class Capteur extends Model {
     /**
@@ -9,6 +10,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      // Capteur.belongsTo(models.Pcd, { foreignKey: "pcd" });
+      Capteur.hasOne(models.Pcd, { foreignKey: "pcd" });
     }
   }
   Capteur.init(
@@ -103,7 +106,16 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
-     
+      pcd: {
+        type: DataTypes.INTEGER,
+        validate: {
+          notEmpty: {
+            arg: true,
+            msg: "Un capteur est réquis",
+          },
+        },
+      },
+
       color: {
         type: DataTypes.STRING,
         validate: {
@@ -120,5 +132,6 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Capteur",
     }
   );
+
   return Capteur;
 };
