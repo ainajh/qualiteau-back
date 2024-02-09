@@ -1,5 +1,6 @@
 const db = require("../models");
 const ModelApp = db.model_app;
+const { createJournal } = require("./journal.controller");
 // Create and Save a new user
 exports.create = async (req, res) => {
   const { name, mesure, sematique, type_val, val_min, val_max, nb_dec } =
@@ -14,8 +15,14 @@ exports.create = async (req, res) => {
     nb_dec,
   };
   ModelApp.create(mdapp_data)
-    .then((data) => {
+    .then(async (data) => {
       const { ...result } = data.dataValues;
+      const user = res.locals.user;
+      const trigg = {
+        message: `${user.lastName} ${user.firstName} a ajouté une modèle d'appareil : "${name}"`,
+        type: "model_app",
+      };
+      await createJournal(trigg);
       res.status(201).json({
         error: false,
         message: "Création avec succès",
@@ -93,8 +100,14 @@ exports.update = async (req, res) => {
   ModelApp.update(mdapp_data, {
     where: { id: id },
   })
-    .then((num) => {
+    .then(async (num) => {
       if (num == 1) {
+        const user = res.locals.user;
+        const trigg = {
+          message: `${user.lastName} ${user.firstName} a modifié une modèle d'appareil : "${name}"`,
+          type: "model_app",
+        };
+        await createJournal(trigg);
         res.status(200).send({
           error: false,
           message: "Modification avec succès.",
@@ -123,7 +136,13 @@ exports.delete = (req, res) => {
   ModelApp.destroy({
     where: { id: id },
   })
-    .then((num) => {
+    .then(async (num) => {
+      const user = res.locals.user;
+      const trigg = {
+        message: `${user.lastName} ${user.firstName} a supprimé une modèle d'appareil`,
+        type: "model_app",
+      };
+      await createJournal(trigg);
       if (num == 1) {
         res.status(200).send({
           error: false,

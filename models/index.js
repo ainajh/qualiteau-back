@@ -51,5 +51,6 @@ db.users = require("./user")(sequelize, Sequelize);
 db.pcd = require("./pcd")(sequelize, Sequelize);
 db.capteur = require("./capteur")(sequelize, Sequelize);
 db.model_app = require("./model_appareil")(sequelize, Sequelize);
+db.journal = require("./journal")(sequelize, Sequelize);
 
 module.exports = db;

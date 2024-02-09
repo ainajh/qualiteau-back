@@ -1,6 +1,8 @@
 const db = require("../models");
 const Capteur = db.capteur;
 const Pcd = db.pcd;
+const { createJournal } = require("./journal.controller");
+
 // Create and Save a new user
 exports.create = async (req, res) => {
   const {
@@ -32,8 +34,14 @@ exports.create = async (req, res) => {
     pcd,
   };
   Capteur.create(capteur_data)
-    .then((data) => {
+    .then(async (data) => {
       const { ...result } = data.dataValues;
+      const user = res.locals.user;
+      const trigg = {
+        message: `${user.lastName} ${user.firstName} a ajouté un capteur: "${name_capt}"`,
+        type: "capteur",
+      };
+      await createJournal(trigg);
       res.status(201).json({
         error: false,
         message: "Création avec succès",
@@ -51,30 +59,28 @@ exports.create = async (req, res) => {
 };
 
 // Retrieve all capteur from the database.
-exports.findAll = (req, res) => {
-  Capteur.findAll()
-    .then(async (data) => {
-      var result = [];
-      var pcdPopulate;
-      for (let index = 0; index < data.length; index++) {
-        pcdPopulate = await Pcd.findByPk(data[index].dataValues.pcd).then(
-          (rer) => rer
-        );
-        result.push({ ...data[index].dataValues, pcd_name: pcdPopulate.dataValues.name_pcd });
-      }
-      res.status(200).send({
-        error: false,
-        message: "Liste de toutes les capteur",
-        data: result,
-      });
-    })
-    .catch((err) => {
-      res.status(500).send({
-        error: true,
-        message: err.message || "Il y a une erreur lors de la requete",
-      });
+exports.findAll = async (req, res) => {
+  try {
+    const data = await db.sequelize.query(`
+      SELECT capteurs.*, pcds.name_pcd AS "pcd_name"
+      FROM capteurs
+      INNER JOIN pcds ON pcds.id = capteurs.pcd;
+    `);
+
+    res.status(200).send({
+      error: false,
+      message: "Liste de toutes les capteur",
+      data: data[0],
     });
+  } catch (error) {
+    console.error("Error occurred:", error);
+    res.status(500).send({
+      error: true,
+      message: error.message || "Il y a une erreur lors de la requete",
+    });
+  }
 };
+
 exports.findAllActive = (req, res) => {
   Capteur.findAll({ where: { status: "active" } })
     .then((data) => {
@@ -151,8 +157,14 @@ exports.update = async (req, res) => {
   Capteur.update(capteur_data, {
     where: { id: id },
   })
-    .then((num) => {
+    .then(async (num) => {
       if (num == 1) {
+        const user = res.locals.user;
+        const trigg = {
+          message: `${user.lastName} ${user.firstName} a modifié un capteur: "${name_capt}"`,
+          type: "capteur",
+        };
+        await createJournal(trigg);
         res.status(200).send({
           error: false,
           message: "Modification avec succès.",
@@ -181,8 +193,14 @@ exports.delete = (req, res) => {
   Capteur.destroy({
     where: { id: id },
   })
-    .then((num) => {
+    .then(async (num) => {
       if (num == 1) {
+        const user = res.locals.user;
+        const trigg = {
+          message: `${user.lastName} ${user.firstName} a supprimé un capteur`,
+          type: "capteur",
+        };
+        await createJournal(trigg);
         res.status(200).send({
           error: false,
           message: "Suppression avec succès!",

@@ -46,6 +46,7 @@ require("./routes/auth.routes")(app);
 require("./routes/pcd.routes")(app);
 require("./routes/capteur.routes")(app);
 require("./routes/model_app.routes")(app);
+require("./routes/journal.routes")(app);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

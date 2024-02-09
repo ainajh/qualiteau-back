@@ -5,6 +5,7 @@ exports.requireAuthAdmin = (req, res, next) => {
   const token = req.headers?.authorization?.replace("Bearer ", "") || "";
   if (token) {
     jwt.verify(token, process.env.TOKEN_SECRET, async (err, decodedToken) => {
+      res.locals.user = decodedToken.dataValues;
       if (err) {
         res.status(401).send({
           error: true,
@@ -34,6 +35,7 @@ exports.requireAuthIngenieur = (req, res, next) => {
   const token = req.headers?.authorization?.replace("Bearer ", "") || "";
   if (token) {
     jwt.verify(token, process.env.TOKEN_SECRET, async (err, decodedToken) => {
+      res.locals.user = decodedToken.dataValues;
       const role = decodedToken.dataValues.role;
       if (err) {
         res.status(401).send({
@@ -65,6 +67,7 @@ exports.requireAuthManager = (req, res, next) => {
   const token = req.headers?.authorization?.replace("Bearer ", "") || "";
   if (token) {
     jwt.verify(token, process.env.TOKEN_SECRET, async (err, decodedToken) => {
+      res.locals.user = decodedToken.dataValues;
       const role = decodedToken.dataValues.role;
       if (err) {
         res.status(401).send({
@@ -96,6 +99,7 @@ exports.requireAuthCollaborator = (req, res, next) => {
   const token = req.headers?.authorization?.replace("Bearer ", "") || "";
   if (token) {
     jwt.verify(token, process.env.TOKEN_SECRET, async (err, decodedToken) => {
+      res.locals.user = decodedToken.dataValues;
       const role = decodedToken.dataValues.role;
       if (err) {
         res.status(401).send({

@@ -1,5 +1,6 @@
 const db = require("../models");
 const Pcd = db.pcd;
+const { createJournal } = require("./journal.controller");
 // Create and Save a new user
 exports.create = async (req, res) => {
   const {
@@ -25,8 +26,14 @@ exports.create = async (req, res) => {
     proprietaire,
   };
   Pcd.create(pcd_data)
-    .then((data) => {
+    .then(async (data) => {
       const { ...result } = data.dataValues;
+      const user = res.locals.user;
+      const trigg = {
+        message: `${user.lastName} ${user.firstName} a ajouté un PCD : "${name_pcd}"`,
+        type: "PCD",
+      };
+      await createJournal(trigg);
       res.status(201).json({
         error: false,
         message: "Création avec succès",
@@ -37,7 +44,7 @@ exports.create = async (req, res) => {
       res.status(500).json({
         error: true,
         message:
-          err?.errors[0].message || "Il y a une erreur lors de la création.",
+          err?.errors[0]?.message || "Il y a une erreur lors de la création.",
       });
     });
 };
@@ -129,8 +136,14 @@ exports.update = async (req, res) => {
   Pcd.update(pcd_data, {
     where: { id: id },
   })
-    .then((num) => {
+    .then(async (num) => {
       if (num == 1) {
+        const user = res.locals.user;
+        const trigg = {
+          message: `${user.lastName} ${user.firstName} a modifié un PCD : "${name_pcd}"`,
+          type: "PCD",
+        };
+        await createJournal(trigg);
         res.status(200).send({
           error: false,
           message: "Modification avec succès.",
@@ -159,8 +172,14 @@ exports.delete = (req, res) => {
   Pcd.destroy({
     where: { id: id },
   })
-    .then((num) => {
+    .then(async (num) => {
       if (num == 1) {
+        const user = res.locals.user;
+        const trigg = {
+          message: `${user.lastName} ${user.firstName} a supprimer un PCD`,
+          type: "PCD",
+        };
+        await createJournal(trigg);
         res.status(200).send({
           error: false,
           message: "Suppression avec succès!",
