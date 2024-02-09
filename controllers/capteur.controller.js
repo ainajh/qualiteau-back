@@ -62,9 +62,9 @@ exports.create = async (req, res) => {
 exports.findAll = async (req, res) => {
   try {
     const data = await db.sequelize.query(`
-      SELECT capteurs.*, pcds.name_pcd AS "pcd_name"
-      FROM capteurs
-      INNER JOIN pcds ON pcds.id = capteurs.pcd;
+    SELECT Capteurs.*, Pcds.name_pcd AS "pcd_name"
+    FROM Capteurs
+    INNER JOIN Pcds ON Pcds.id = Capteurs.pcd;
     `);
 
     res.status(200).send({
