@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "u466480084_root",
-    "password": "Ainajh11@",
-    "database": "u466480084_db_qualiteau",
-    "host": "srv698.hstgr.io",
+    "username": "root",
+    "password": "",
+    "database": "db_qualiteau",
+    "host": "localhost",
     "dialect": "mysql"
   },
   "test": {
